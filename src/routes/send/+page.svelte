@@ -1,13 +1,3 @@
-<!-- Send Money page
-
-<div>get other user's address</div>
-<div>Get Amount</div>
-
-<div>show Fee</div>
-<div>Button for submitting</div>
-
-<a href="/done">Done (Show Modal)</a>
-<a href="/main">Back</a> -->
 <script>
   import {
     Alert,
@@ -23,47 +13,55 @@
     Dialog,
     DialogContent,
     DialogBody,
-    DialogFooter,
   } from "@ubeac/svelte";
-  import { goto } from "$app/navigation";
 
   let pinModalOpen = false;
 
-  function onSend() {
-      pinModalOpen = false
-      console.log('send')
+  let showProgress = false;
 
+  let doneState = false;
+
+  function onSend() {
+    showProgress = true;
+    // TODO: Api send money
+    setTimeout(onDone, 2000);
+    console.log("send");
+  }
+
+  function onDone() {
+    doneState = "success";
+    showProgress = false;
+    // pinModalOpen = false;
+  }
+
+  function onFailure() {
+    showProgress = false;
+    doneState = "failed";
   }
 
   function onCancel() {
-      pin = undefined
-      pinModalOpen = false
+    pin = undefined;
+    pinModalOpen = false;
   }
-  
+
   function onNext() {
     pinModalOpen = true;
   }
 
-  let address = ''
-  let amount = 0
+  let address = "";
+  let amount = 0;
 
-  let pin = undefined
+  $: account_name = address.split("/")?.pop();
+
+  let pin = undefined;
 </script>
-
-<!-- Main Page Show balance -->
-
-<!-- <a href="/">Logout</a>
-  <a href="/send">Send Money</a>
-  <a href="/receive">Receive Money</a>
-  <a href="/history">View transaction history</a> -->
 
 <App>
   <Grid slot="header">
     <Card outline class="w-100">
       <CardFooter>
-          <Button href="/main" shape="circle" outline>
-
-          <Icon icon="ic:sharp-arrow-back"/>
+        <Button href="/main" shape="circle" outline>
+          <Icon icon="ic:sharp-arrow-back" />
         </Button>
         <h2>Send Money</h2>
       </CardFooter>
@@ -74,24 +72,38 @@
       <p>Enter url of the user who want to receive the money</p>
       <CardBody>
         <Grid justifyContent="end" gutter="md">
+          <GridItem col="12">
+            <Alert type="warning">
+              Your account is not enabled, to enable your account you need to
+              set a <a class="alert-link" href="/settings">PIN Code</a>.
+            </Alert>
+          </GridItem>
           <FormInput
             bind:value={address}
             col="12"
             placeholder="https://minipay.deno.dev/user/...."
             label="Account URL"
           />
-          <FormInput bind:value={amount} col="12" placeholder="10 - 1000 AF" label="Amount" />
-          <GridItem col=12>
-              {#if amount}
-                <p>Transaction Fee: {(amount / 100).toFixed(0)} AF</p>
-              {/if}
+          <FormInput
+            bind:value={amount}
+            col="12"
+            type="number"
+            placeholder="10 - 1000 AF"
+            label="Amount"
+          />
+          <GridItem col="12">
+            {#if amount}
+              <p>Transaction Fee: {(amount / 100).toFixed(0)} AF</p>
+            {/if}
           </GridItem>
           <GridItem>
-            <Button disabled={!address || !amount} on:click={onNext} color="blue">Next</Button>
+            <Button
+              disabled={!account_name || !amount}
+              on:click={onNext}
+              color="blue">Next</Button
+            >
           </GridItem>
         </Grid>
-        <!-- <div class="w-100 text-center">Your Balance is:</div> -->
-        <!-- <div class="w-100 text-center lg">100<span class="sm bold">AF</span></div> -->
       </CardBody>
     </CardBody>
 
@@ -103,23 +115,47 @@
   <DialogContent>
     <DialogBody>
       <Grid justifyContent="end" gutter="md">
-        <Alert>
-          <p>After this operation You will send {amount} AF to "{address.split('/').pop()}"</p>
-        </Alert>
+        <GridItem col="12">
+          <Alert>
+            <p>
+              After this operation You will send {amount} AF to "{address
+                .split("/")
+                .pop()}"
+            </p>
+          </Alert>
+        </GridItem>
         <FormInput
-            bind:value={pin}
+          bind:value={pin}
           label="Enter Your pin"
-          type="number"
+          type="password"
+          max="4"
           col="12"
           placeholder="0000"
         />
+        <GridItem col="12">
+          {#if showProgress}
+            <div>Sending....</div>
+          {:else if doneState === "success"}
+            <div>Done</div>
+          {:else if doneState === "failes"}
+            <div>Failes</div>
+          {/if}
+        </GridItem>
         <Grid gutter="md">
+          {#if !doneState && !showProgress}
             <GridItem>
-                <Button on:click={onCancel}>Cancel</Button>
+              <Button on:click={onCancel}>Cancel</Button>
             </GridItem>
-            <GridItem>
-                <Button on:click={onSend} color="blue">Send</Button>
-            </GridItem>
+          {/if}
+          <GridItem>
+            {#if doneState === false}
+              <Button loading={showProgress} on:click={onSend} color="blue">
+                Send
+              </Button>
+            {:else}
+              <Button on:click={onCancel} color="blue">Close</Button>
+            {/if}
+          </GridItem>
         </Grid>
       </Grid>
     </DialogBody>
@@ -132,4 +168,4 @@
     text-align: center;
     width: 100%;
   }
-</style>   
+</style>

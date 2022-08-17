@@ -7,6 +7,7 @@
     CardFooter,
     CardBody,
     Icon,
+Button,
   } from "@ubeac/svelte";
   import {goto}from '$app/navigation'
 
@@ -36,6 +37,9 @@
         <Card outline class="w-100">
             <CardFooter>
                 <h2>Main</h2>
+                <Button href="/settings" shape="circle">
+                  <Icon icon="ic:sharp-settings"/>
+                </Button>
             </CardFooter>
         </Card>
     </Grid>
