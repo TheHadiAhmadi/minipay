@@ -81,7 +81,7 @@
           <FormInput
             bind:value={address}
             col="12"
-            placeholder="https://minipay.deno.dev/user/...."
+            placeholder="https://minipay.vercel.app/user/...."
             label="Account URL"
           />
           <FormInput
