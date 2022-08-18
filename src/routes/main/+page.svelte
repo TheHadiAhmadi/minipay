@@ -7,21 +7,23 @@
     CardFooter,
     CardBody,
     Icon,
-Button,
+    Button,
   } from "@ubeac/svelte";
-  import {goto}from '$app/navigation'
+  import { goto } from "$app/navigation";
+  import Main from "../../lib/layouts/Main.svelte";
+import HeaderText from "../../lib/layouts/HeaderText.svelte";
+import Body from "../../lib/layouts/Body.svelte";
 
   function onSend() {
-    goto('/send')
+    goto("/main/send");
   }
 
   function onReceive() {
-    goto('/receive')
-
+    goto("/main/receive");
   }
   function onHistory() {
-    goto('/history')
-
+    // goto("/main/history");
+    goto('#history')
   }
 </script>
 
@@ -32,66 +34,75 @@ Button,
 <a href="/receive">Receive Money</a>
 <a href="/history">View transaction history</a> -->
 
-<App>
-    <Grid slot="header">
-        <Card outline class="w-100">
-            <CardFooter>
-                <h2>Main</h2>
-                <Button href="/settings" shape="circle">
-                  <Icon icon="ic:sharp-settings"/>
-                </Button>
-            </CardFooter>
-        </Card>
-    </Grid>
-  <Card class="h-100">
+<Main>
+  <Grid class="w-100" justifyContent="between" slot="header">
+    <div class="w-4">
+      <!-- <Icon icon="ic:sharp-settings" /> -->
+    </div>
+  
+    <HeaderText>Main</HeaderText>
+    <Button href="/settings" shape="circle">
+      <Icon icon="ic:sharp-settings" />
+    </Button>
+  </Grid>
+  <Body>
     <CardBody>
-      <CardBody>
-        <div class="w-100 text-center">Your Balance is:</div>
-        <div class="w-100 text-center lg">100<span class="sm bold">AF</span></div>
-      </CardBody>
+      <div class="w-100 text-center">Your Balance is:</div>
+      <div class="w-100 text-center lg">100<span class="sm bold">AF</span></div>
     </CardBody>
     <CardBody>
       <Grid justifyContent="evenly">
-        <GridItem>
-          <!-- <Button ghost color="dark"> -->
-          <div on:click={onSend} class="button">
+        <GridItem on:click={onSend} class="button">
             <Icon size="3x" icon="ic:sharp-upload" />
             <div class="text-center">Send</div>
-          </div>
-          <!-- </Button> -->
         </GridItem>
-        <GridItem>
-          <!-- <Button ghost color="dark"> -->
-          <div on:click={onReceive} class="button">
+        <GridItem on:click={onReceive} class="button">
             <Icon size="3x" icon="ic:sharp-download" />
             <div class="text-center">Receive</div>
-          </div>
-          <!-- </Button> -->
         </GridItem>
-        <GridItem>
-          <!-- <Button ghost color="dark"> -->
-          <div on:click={onHistory} class="button">
+        <GridItem on:click={onHistory} class="button">
             <Icon size="3x" icon="ic:sharp-history" />
             <div class="text-center">history</div>
-          </div>
-          <!-- </Button> -->
         </GridItem>
       </Grid>
     </CardBody>
-    <CardBody class="h-100">
+    <Grid id="history" vertical>
+      <div class="sticky mb-3" class:expand={true}>Transaction History</div>
+      
+      {#each Array.from({length: 10}) as _, index}
+        <div class="p-3 border">{index}</div>
+      {/each}
+    </Grid>
+  
+  </Body>
 
-    </CardBody>
-  </Card>
-</App>
+  <div class="bg-light text-dark p-2" slot="footer">
+
+  </div>
+  </Main>
 
 <style global>
- 
-    h2 {
-        margin: 0;
-        text-align: center;
-        width: 100%;
-    }
+
+  .sticky {
+    position: sticky;
+    padding: 1rem;
+    top: 0;
+  }
+
+  .sticky.expand {
+    margin-left: -20px;
+    margin-right: -20px;
+    background-color: #8dbcee;
     
+  }
+
+  h2 {
+    
+    margin: 0;
+    text-align: center;
+    width: 100%;
+  }
+
   .lg {
     font-size: 48px;
   }
@@ -102,17 +113,26 @@ Button,
     font-size: 12px;
   }
 
-  .button :global(.u-icon) {
-      transition: all 0.2s ease;
+  :global(.button) > :global(*) {
+    transition: all 0.2s ease;
   }
-  .button :global(.u-icon) {
-      background-color: lightblue;
-      padding: 0.5rem;
-      border-radius: 50%;
+  :global(.button) :global(.u-icon) {
+    background-color: #8dbcee;
+    padding: 0.5rem;
+    border-radius: 50%;
   }
 
-  .button:hover :global(.u-icon) {
-      margin-bottom: 4px;
+  :global(.button):hover :global(.u-icon) {
+    margin-bottom: 4px;
     scale: 1.2;
+  }
+
+  :global(.button) div {
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+
+  :global(.button):hover div {
+    margin-bottom: 0;
   }
 </style>

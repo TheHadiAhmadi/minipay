@@ -14,6 +14,13 @@
     DialogContent,
     DialogBody,
   } from "@ubeac/svelte";
+  import BackButton from "../../../lib/layouts/BackButton.svelte";
+import Body from "../../../lib/layouts/Body.svelte";
+import Header from "../../../lib/layouts/Header.svelte";
+  import HeaderText from "../../../lib/layouts/HeaderText.svelte";
+  import Main from "../../../lib/layouts/Main.svelte";
+
+  import {page} from '$app/stores'
 
   let pinModalOpen = false;
 
@@ -48,68 +55,67 @@
     pinModalOpen = true;
   }
 
-  let address = "";
-  let amount = 0;
+  let address = $page.url.searchParams.get('address') ?? '';
+  let amount = $page.url.searchParams.get('amount') ?? 0;
+
+  $: console.log($page.url)
 
   $: account_name = address.split("/")?.pop();
 
   let pin = undefined;
 </script>
 
-<App>
+<!-- <App>
   <Grid slot="header">
     <Card outline class="w-100">
-      <CardFooter>
-        <Button href="/main" shape="circle" outline>
-          <Icon icon="ic:sharp-arrow-back" />
-        </Button>
-        <h2>Send Money</h2>
-      </CardFooter>
+      
     </Card>
-  </Grid>
-  <Card class="h-100">
-    <CardBody>
-      <p>Enter url of the user who want to receive the money</p>
-      <CardBody>
-        <Grid justifyContent="end" gutter="md">
-          <GridItem col="12">
-            <Alert type="warning">
-              Your account is not enabled, to enable your account you need to
-              set a <a class="alert-link" href="/settings">PIN Code</a>.
-            </Alert>
-          </GridItem>
-          <FormInput
-            bind:value={address}
-            col="12"
-            placeholder="https://minipay.vercel.app/user/...."
-            label="Account URL"
-          />
-          <FormInput
-            bind:value={amount}
-            col="12"
-            type="number"
-            placeholder="10 - 1000 AF"
-            label="Amount"
-          />
-          <GridItem col="12">
-            {#if amount}
-              <p>Transaction Fee: {(amount / 100).toFixed(0)} AF</p>
-            {/if}
-          </GridItem>
-          <GridItem>
-            <Button
-              disabled={!account_name || !amount}
-              on:click={onNext}
-              color="blue">Next</Button
-            >
-          </GridItem>
-        </Grid>
-      </CardBody>
-    </CardBody>
+  </Grid> -->
+<Main>
+  <Header slot="header">
+    <BackButton href="/main" />
+    <HeaderText>Send Money</HeaderText>
+  </Header>
 
-    <CardBody class="h-100" />
-  </Card>
-</App>
+  <Body>
+    <p>Enter url of the user who want to receive the money</p>
+    <Grid justifyContent="end" gutter="md">
+      <GridItem col="12">
+        <Alert type="warning">
+          Your account is not enabled, to enable your account you need to set a <a
+            class="alert-link"
+            href="/settings">PIN Code</a
+          >.
+        </Alert>
+      </GridItem>
+      <FormInput
+        bind:value={address}
+        col="12"
+        placeholder="https://minipay.vercel.app/user/...."
+        label="Account URL"
+      />
+      <FormInput
+        bind:value={amount}
+        col="12"
+        type="number"
+        placeholder="10 - 1000 AF"
+        label="Amount"
+      />
+      <GridItem col="12">
+        {#if amount}
+          <p>Transaction Fee: {(amount / 100).toFixed(0)} AF</p>
+        {/if}
+      </GridItem>
+      <GridItem>
+        <Button
+          disabled={!account_name || !amount}
+          on:click={onNext}
+          color="blue">Next</Button
+        >
+      </GridItem>
+    </Grid>
+  </Body>
+</Main>
 
 <Dialog placement="center" bind:open={pinModalOpen}>
   <DialogContent>
@@ -161,11 +167,3 @@
     </DialogBody>
   </DialogContent>
 </Dialog>
-
-<style global>
-  h2 {
-    margin: 0;
-    text-align: center;
-    width: 100%;
-  }
-</style>
