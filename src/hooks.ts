@@ -1,7 +1,7 @@
 import prisma from "$lib/prisma";
 import { UserRepository } from "./lib/server/repositories";
 import { JWTService, UserService } from "./lib/server/services";
-import { API_KEY_SECRET } from "$env/static/private";
+import { JWT_SECRET } from "$env/static/private";
 import { UserController } from "$lib/server";
 import { PrismaRepository } from "$lib/server/repositories/repository";
 
