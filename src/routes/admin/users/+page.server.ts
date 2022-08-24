@@ -1,6 +1,6 @@
 export async function load({request, locals}) {
     return {
-        users: await locals.repos.user.getAllUsers()
+        users: await locals.repos.UserRepository.getAllUsers()
     }
 }
 

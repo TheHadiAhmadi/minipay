@@ -1,5 +1,5 @@
 export async function load({params, locals}) {
     return {
-        user: await locals.repos.user.getUserById(params.id)
+        user: await locals.repos.UserRepository.getUserById(params.id)
     }
 }
