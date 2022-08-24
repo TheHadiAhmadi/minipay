@@ -17,23 +17,19 @@ export async function handle({ event, resolve }) {
   }
 
   function addRepository(repository, ...args) {
-    const name= repository.constructor.name;
-    event.locals.repos[name] = new repository(...args);
+    event.locals.repos[repository.name] = new repository(...args);
   }
 
   function repo(Repo) {
-    const name = Repo.constructor.name
-    return event.locals.repos[name];
+    return event.locals.repos[Repo.name];
   }
 
   function addService(service, ...args) {
-    const name = service.constructor.name
-    event.locals.services[name] = new service(...args);
+    event.locals.services[service.name] = new service(...args);
   }
 
   function service(Service) {
-    const name = Service.constructor.name; 
-    return event.locals.services[name];
+    return event.locals.services[Service.name];
   }
 
   const db = new PrismaRepository(prisma);
