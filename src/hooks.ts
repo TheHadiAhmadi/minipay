@@ -39,7 +39,7 @@ export async function handle({ event, resolve }) {
   const db = new PrismaRepository(prisma);
 
   addRepository(UserRepository, db);
-  addService(JWTService, API_KEY_SECRET);
+  addService(JWTService, JWT_SECRET);
   addService(UserService, repo(UserRepository), service(JWTService));
   addController('user', UserController, service(UserService));
 
