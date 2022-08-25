@@ -14,6 +14,9 @@
 import HeaderText from "../../lib/layouts/HeaderText.svelte";
 import Body from "../../lib/layouts/Body.svelte";
 
+export let data;
+let balance = 0
+
   function onSend() {
     goto("/main/send");
   }
@@ -48,7 +51,7 @@ import Body from "../../lib/layouts/Body.svelte";
   <Body>
     <CardBody>
       <div class="w-100 text-center">Your Balance is:</div>
-      <div class="w-100 text-center lg">100<span class="sm bold">AF</span></div>
+      <div class="w-100 text-center lg">{balance}<span class="sm bold">AF</span></div>
     </CardBody>
     <CardBody>
       <Grid justifyContent="evenly">
